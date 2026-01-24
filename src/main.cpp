@@ -8,12 +8,24 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, 3},     // Left Chassis Ports (negative port will reverse it!)
-    {-4, -5, -6},  // Right Chassis Ports (negative port will reverse it!)
+    {1, -2},     // Left Chassis Ports (negative port will reverse it!)
+    {9, -8},  // Right Chassis Ports (negative port will reverse it!)
 
     -1,      // IMU Port
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+
+pros::Motor intake(5);
+
+void intake_control() {
+  if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+    intake.move(127);
+  } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+    intake.move(-127);
+  } else {
+    intake.move(0);
+  }
+}
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
@@ -29,6 +41,7 @@ ez::Drive chassis(
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
 void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
@@ -71,7 +84,7 @@ void initialize() {
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
-  master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
+  master.rumble(".");
 }
 
 /**
@@ -109,9 +122,7 @@ void competition_initialize() {
  */
 void autonomous() {
   chassis.pid_targets_reset();                // Resets PID targets to 0
-  chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
-  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
 
   /*
@@ -150,36 +161,10 @@ void screen_print_tracker(ez::tracking_wheel *tracker, std::string name, int lin
  */
 void ez_screen_task() {
   while (true) {
-    // Only run this when not connected to a competition switch
-    if (!pros::competition::is_connected()) {
-      // Blank page for odom debugging
-      if (chassis.odom_enabled() && !chassis.pid_tuner_enabled()) {
-        // If we're on the first blank page...
-        if (ez::as::page_blank_is_on(0)) {
-          // Display X, Y, and Theta
-          ez::screen_print("x: " + util::to_string_with_precision(chassis.odom_x_get()) +
-                              "\ny: " + util::to_string_with_precision(chassis.odom_y_get()) +
-                              "\na: " + util::to_string_with_precision(chassis.odom_theta_get()),
-                           1);  // Don't override the top Page line
-
-          // Display all trackers that are being used
-          screen_print_tracker(chassis.odom_tracker_left, "l", 4);
-          screen_print_tracker(chassis.odom_tracker_right, "r", 5);
-          screen_print_tracker(chassis.odom_tracker_back, "b", 6);
-          screen_print_tracker(chassis.odom_tracker_front, "f", 7);
-        }
-      }
-    }
-
-    // Remove all blank pages when connected to a comp switch
-    else {
-      if (ez::as::page_blank_amount() > 0)
-        ez::as::page_blank_remove_all();
-    }
-
     pros::delay(ez::util::DELAY_TIME);
   }
 }
+
 pros::Task ezScreenTask(ez_screen_task);
 
 /**
@@ -250,6 +235,7 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
+    intake_control();
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
