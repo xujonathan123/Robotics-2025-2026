@@ -8,14 +8,15 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, -2},     // Left Chassis Ports (negative port will reverse it!)
-    {9, -8},  // Right Chassis Ports (negative port will reverse it!)
+    {-3, -4},     // Left Chassis Ports (negative port will reverse it!)
+    {-9, 8},  // Right Chassis Ports (negative port will reverse it!)
 
     -1,      // IMU Port
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 pros::Motor intake(5);
+pros::Motor intake_stage2(6);
 
 void intake_control() {
   if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
@@ -24,6 +25,14 @@ void intake_control() {
     intake.move(-127);
   } else {
     intake.move(0);
+  }
+
+  if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    intake_stage2.move(127);
+  } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    intake_stage2.move(-127);
+  } else {
+    intake_stage2.move(0);
   }
 }
 
@@ -72,13 +81,8 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       {"#1 Test\n\nFirst basic test", my_first_auton},
-      {"Drive\n\nDrive forward and come back", drive_example},
-      {"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
-      {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
-      {"Combine all 3 movements", combining_movements},
-      {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
   });
 
   // Initialize chassis and auton selector

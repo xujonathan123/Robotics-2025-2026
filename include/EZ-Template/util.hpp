@@ -99,10 +99,14 @@ enum drive_directions { FWD = 0,
 enum e_angle_behavior { raw = 0,
                         left_turn = 1,
                         LEFT_TURN = 1,
+                        left = 1,
+                        LEFT = 1,
                         counterclockwise = 1,
                         ccw = 1,
                         right_turn = 2,
                         RIGHT_TURN = 2,
+                        right = 2,
+                        RIGHT = 2,
                         clockwise = 2,
                         cw = 2,
                         shortest = 3,
@@ -294,7 +298,7 @@ pose vector_off_point(double added, pose icurrent);
 double turn_shortest(double target, double current, bool print = false);
 
 /**
- * Returns the farthest away angle for the robot to turn to in order to get to target.
+ * Returns the shortest angle for the robot to turn to in order to get to target.
  *
  * \param target
  *        target value in degrees

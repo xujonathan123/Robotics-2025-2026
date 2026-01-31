@@ -4,6 +4,8 @@
 #include "api.h"
 
 extern Drive chassis;
+extern pros::Motor intake;
+extern pros::Motor intake_stage2;
 
 // Your motors, sensors, etc. should go here.  Below are examples
 

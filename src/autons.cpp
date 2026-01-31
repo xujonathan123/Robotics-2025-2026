@@ -6,8 +6,8 @@
 /////
 
 // These are out of 127
-const int DRIVE_SPEED = 110; // full speed is 127
-const int TURN_SPEED = 90;
+const int DRIVE_SPEED = 100; // full speed is 127
+const int TURN_SPEED = 70;
 const int SWING_SPEED = 110;
 
 ///
@@ -34,42 +34,6 @@ void default_constants() {
   chassis.slew_swing_constants_set(3_in, 80);
 
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
-}
-
-///
-// Drive Example
-///
-void drive_example() {
-  // The first parameter is target inches
-  // The second parameter is max speed the robot will drive at
-  // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
-  // for slew, only enable it when the drive distance is greater than the slew distance + a few inches
-
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-12_in, DRIVE_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-12_in, DRIVE_SPEED);
-  chassis.pid_wait();
-}
-
-///
-// Turn Example
-///
-void turn_example() {
-  // The first parameter is the target in degrees
-  // The second parameter is max speed the robot will drive at
-
-  chassis.pid_turn_set(90_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
 }
 
 ///
@@ -114,100 +78,35 @@ void swing_example() {
   chassis.pid_wait();
 }
 
-///
-// Motion Chaining
-///
-void motion_chaining() {
-  // Motion chaining is where motions all try to blend together instead of individual movements.
-  // This works by exiting while the robot is still moving a little bit.
-  // To use this, replace pid_wait with pid_wait_quick_chain.
+void my_first_auton() {
+  // 1) Drive forward 24 in while stage 1 intakes and stage 2 outtakes
+  intake.move(127);
+  intake_stage2.move(-127);
   chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
   chassis.pid_wait();
+  intake_stage2.move(0);
+  intake.move(0);
 
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(-45_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  // Your final motion should still be a normal pid_wait
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
-}
-
-///
-// Auto that tests everything
-///
-void combining_movements() {
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::RIGHT_SWING, -45_deg, SWING_SPEED, 45);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
-}
-
-///
-// Interference example
-///
-void interfered_example(int attempts) {
-  for (int i = 0; i < attempts - 1; i++) {
-    // Attempt to drive backward
-    printf("i - %i", i);
-    chassis.pid_drive_set(-12_in, 127);
-    chassis.pid_wait();
-
-    // If failsafed...
-    if (chassis.interfered) {
-      chassis.drive_sensor_reset();
-      chassis.pid_drive_set(-2_in, 20);
-      pros::delay(1000);
-    }
-    // If the robot successfully drove back, return
-    else {
-      return;
-    }
-  }
-}
-
-// If there is no interference, the robot will drive forward and turn 90 degrees.
-// If interfered, the robot will drive forward and then attempt to drive backward.
-void interfered_example() {
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
-
-  if (chassis.interfered) {
-    interfered_example(3);
-    return;
-  }
-
+  // 2) Turn left ~90 degrees
   chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait();
-}
 
-// . . .
-// Make your own autonomous functions here!
-// . . .
+  // 3) Drive forward 25 in
+  chassis.pid_drive_set(25_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
 
-void my_first_auton() {
-    // Example: drive forward 24 inches, turn 90 degrees
-    chassis.pid_drive_set(24_in, DRIVE_SPEED);
-    chassis.pid_wait();
+  // 4) Turn left 45 degrees
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
 
-    chassis.pid_turn_set(90_deg, TURN_SPEED);
-    chassis.pid_wait();
+  // 5) Back up 20 in
+  chassis.pid_drive_set(-20_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
 
-    chassis.pid_drive_set(-24_in, DRIVE_SPEED);
-    chassis.pid_wait();
+  // 6) Run both stages to eject balls from the top
+  intake.move(127);
+  intake_stage2.move(127);
+  pros::delay(1000);
+  intake.move(0);
+  intake_stage2.move(0);
 }
