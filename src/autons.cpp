@@ -16,7 +16,7 @@ const int SWING_SPEED = 110;
 void default_constants() {
   // P, I, D, and Start I
   chassis.pid_drive_constants_set(20.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions
-  chassis.pid_heading_constants_set(11.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
+  chassis.pid_heading_constants_set(0.0, 0.0, 0.0);          // No IMU: disable heading correction
   chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
   chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
 
@@ -33,14 +33,14 @@ void default_constants() {
   chassis.slew_drive_constants_set(3_in, 70);
   chassis.slew_swing_constants_set(3_in, 80);
 
-  chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
+  chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there 
 }
 
 ///
 // Combining Turn + Drive
 ///
 void drive_and_turn() {
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 
   chassis.pid_turn_set(45_deg, TURN_SPEED);
@@ -52,7 +52,7 @@ void drive_and_turn() {
   chassis.pid_turn_set(0_deg, TURN_SPEED);
   chassis.pid_wait();
 
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
 }
 
@@ -82,26 +82,33 @@ void my_first_auton() {
   // 1) Drive forward 24 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+  chassis.pid_drive_set(30_in, 70, true, false);
   chassis.pid_wait();
+  pros::delay(100);
   intake_stage2.move(0);
   intake.move(0);
 
-  // 2) Turn left ~90 degrees
-  chassis.pid_turn_set(90_deg, TURN_SPEED);
-  chassis.pid_wait();
+  // 2) Timed left turn ~90 degrees (no IMU)
+  chassis.drive_set(-70, 70);
+  pros::delay(600);
+  chassis.drive_set(0, 0);
+  pros::delay(100);
 
   // 3) Drive forward 25 in
-  chassis.pid_drive_set(25_in, DRIVE_SPEED, true);
+  chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
+  pros::delay(100);
 
-  // 4) Turn left 45 degrees
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait();
+  // 4) Timed left turn ~90 degrees (no IMU)
+  chassis.drive_set(-70, 70);
+  pros::delay(450);
+  chassis.drive_set(0, 0);
+  pros::delay(100);
 
   // 5) Back up 20 in
-  chassis.pid_drive_set(-20_in, DRIVE_SPEED, true);
+  chassis.pid_drive_set(-30_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
+  pros::delay(100);
 
   // 6) Run both stages to eject balls from the top
   intake.move(127);

@@ -9,7 +9,7 @@
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
     {-3, -4},     // Left Chassis Ports (negative port will reverse it!)
-    {-9, 8},  // Right Chassis Ports (negative port will reverse it!)
+    {8, -7},  // Right Chassis Ports (negative port will reverse it!)
 
     -1,      // IMU Port
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -80,15 +80,15 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"#1 Test\n\nFirst basic test", my_first_auton},
-      {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
+      {"My first auton\n\nfirst auton for starting left side", my_first_auton},
+      {"Drive and Turn\n\nexemplar drive forward and turn", drive_and_turn},
+      {"Swing example\n\nexemplar swing", swing_example},
   });
 
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
-  master.rumble(".");
+  // master.rumble("."); removed to avoid disturbing auton start position.
 }
 
 /**
@@ -230,8 +230,7 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
 
-    chassis.opcontrol_tank();  // Tank control
-    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
@@ -240,6 +239,16 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     intake_control();
+
+    // Debug: show encoder signs while driving forward
+    static int encoder_debug_counter = 0;
+    if (++encoder_debug_counter % 10 == 0) {
+      const double left = chassis.drive_sensor_left();
+      const double right = chassis.drive_sensor_right();
+      ez::screen_print("L: " + util::to_string_with_precision(left) + "  R: " +
+                          util::to_string_with_precision(right),
+                      0);
+    }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
