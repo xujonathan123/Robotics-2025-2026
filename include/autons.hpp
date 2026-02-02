@@ -6,4 +6,5 @@ void drive_and_turn();
 void swing_example();
 
 // own functions
-void my_first_auton();
+void left_start_auton();
+void right_start_auton();

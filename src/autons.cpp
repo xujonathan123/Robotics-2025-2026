@@ -78,11 +78,11 @@ void swing_example() {
   chassis.pid_wait();
 }
 
-void my_first_auton() {
+void left_start_auton() {
   // 1) Drive forward 24 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
-  chassis.pid_drive_set(30_in, 70, true, false);
+  chassis.pid_drive_set(35_in, 40, true, false);
   chassis.pid_wait();
   pros::delay(100);
   intake_stage2.move(0);
@@ -99,9 +99,49 @@ void my_first_auton() {
   chassis.pid_wait();
   pros::delay(100);
 
-  // 4) Timed left turn ~90 degrees (no IMU)
+  // 4) Timed left turn ~75 degrees (no IMU)
   chassis.drive_set(-70, 70);
-  pros::delay(450);
+  pros::delay(425);
+  chassis.drive_set(0, 0);
+  pros::delay(100);
+
+  // 5) Back up 20 in
+  chassis.pid_drive_set(-30_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+  pros::delay(100);
+
+  // 6) Run both stages to eject balls from the top
+  intake.move(127);
+  intake_stage2.move(127);
+  pros::delay(1000);
+  intake.move(0);
+  intake_stage2.move(0);
+}
+
+void right_start_auton() {
+  // 1) Drive forward 24 in while stage 1 intakes and stage 2 outtakes
+  intake.move(127);
+  intake_stage2.move(-127);
+  chassis.pid_drive_set(35_in, 40, true, false);
+  chassis.pid_wait();
+  pros::delay(100);
+  intake_stage2.move(0);
+  intake.move(0);
+
+  // 2) Timed right turn ~90 degrees (no IMU)
+  chassis.drive_set(70, -70);
+  pros::delay(600);
+  chassis.drive_set(0, 0);
+  pros::delay(100);
+
+  // 3) Drive forward 25 in
+  chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
+  pros::delay(100);
+
+  // 4) Timed right turn ~75 degrees (no IMU)
+  chassis.drive_set(70, -70);
+  pros::delay(425);
   chassis.drive_set(0, 0);
   pros::delay(100);
 

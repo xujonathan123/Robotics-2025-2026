@@ -80,7 +80,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"My first auton\n\nfirst auton for starting left side", my_first_auton},
+      {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
+      {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
       {"Drive and Turn\n\nexemplar drive forward and turn", drive_and_turn},
       {"Swing example\n\nexemplar swing", swing_example},
   });
@@ -239,16 +240,6 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     intake_control();
-
-    // Debug: show encoder signs while driving forward
-    static int encoder_debug_counter = 0;
-    if (++encoder_debug_counter % 10 == 0) {
-      const double left = chassis.drive_sensor_left();
-      const double right = chassis.drive_sensor_right();
-      ez::screen_print("L: " + util::to_string_with_precision(left) + "  R: " +
-                          util::to_string_with_precision(right),
-                      0);
-    }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
