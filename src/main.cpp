@@ -8,14 +8,14 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, -3},     // Left Chassis Ports (negative port will reverse it!)
-    {8, -7, -6},  // Right Chassis Ports (negative port will reverse it!)
+    {-1, 2, 3},     // Left Chassis Ports (negative port will reverse it!)
+    {-8, 7, -6},  // Right Chassis Ports (negative port will reverse it!)
 
-    -1,      // IMU Port
+    12,      // IMU Port
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
-pros::Motor intake(4);
+pros::Motor intake(16);
 pros::Motor intake_stage2(5);
 
 void intake_control() {
@@ -68,8 +68,9 @@ void initialize() {
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_drive_activebrake_set(1.5);   // Sets the active brake kP. We recommend ~2.  0 will disable.
+  chassis.opcontrol_drive_activebrake_set(0.4);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.3, 0.3);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
+  chassis.opcontrol_speed_max_set(120);            // Cap driver speed to keep acceleration manageable on a light robot.
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
@@ -128,6 +129,7 @@ void competition_initialize() {
 void autonomous() {
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.drive_imu_reset();                  // Reset IMU heading so turn targets are repeatable
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
 
   /*
