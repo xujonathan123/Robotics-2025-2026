@@ -5,10 +5,11 @@
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
-// These are out of 127
-const int DRIVE_SPEED = 100; // full speed is 127
-const int TURN_SPEED = 70;
-const int SWING_SPEED = 110;
+// These are out of 127.
+// Lowered for a 3-motor-per-side drive so auton is calmer and more consistent.
+const int DRIVE_SPEED = 70;  // full speed is 127
+const int TURN_SPEED = 50;
+const int SWING_SPEED = 80;
 
 ///
 // Constants
@@ -29,9 +30,9 @@ void default_constants() {
   chassis.pid_drive_chain_constant_set(3_in);
 
   // Slew constants
-  chassis.slew_turn_constants_set(3_deg, 70);
-  chassis.slew_drive_constants_set(3_in, 70);
-  chassis.slew_swing_constants_set(3_in, 80);
+  chassis.slew_turn_constants_set(3_deg, 50);
+  chassis.slew_drive_constants_set(3_in, 50);
+  chassis.slew_swing_constants_set(3_in, 60);
 
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there 
 }
@@ -79,7 +80,7 @@ void swing_example() {
 }
 
 void left_start_auton() {
-  // 1) Drive forward 24 in while stage 1 intakes and stage 2 outtakes
+  // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
   chassis.pid_drive_set(35_in, 40, true, false);
@@ -89,23 +90,23 @@ void left_start_auton() {
   intake.move(0);
 
   // 2) Timed left turn ~90 degrees (no IMU)
-  chassis.drive_set(-70, 70);
-  pros::delay(600);
+  chassis.drive_set(-45, 45);
+  pros::delay(450);
   chassis.drive_set(0, 0);
   pros::delay(100);
 
-  // 3) Drive forward 25 in
+  // 3) Drive forward 42 in
   chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(100);
 
-  // 4) Timed left turn ~75 degrees (no IMU)
-  chassis.drive_set(-70, 70);
-  pros::delay(425);
+  // 4) Timed left turn ~70 degrees (no IMU)
+  chassis.drive_set(-45, 45);
+  pros::delay(350);
   chassis.drive_set(0, 0);
   pros::delay(100);
 
-  // 5) Back up 20 in
+  // 5) Back up 30 in
   chassis.pid_drive_set(-30_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(100);
@@ -119,7 +120,7 @@ void left_start_auton() {
 }
 
 void right_start_auton() {
-  // 1) Drive forward 24 in while stage 1 intakes and stage 2 outtakes
+  // 1) Drive forward 35 in while stage 1 intakes and stage 2 outtakes
   intake.move(127);
   intake_stage2.move(-127);
   chassis.pid_drive_set(35_in, 40, true, false);
@@ -129,23 +130,23 @@ void right_start_auton() {
   intake.move(0);
 
   // 2) Timed right turn ~90 degrees (no IMU)
-  chassis.drive_set(70, -70);
-  pros::delay(600);
+  chassis.drive_set(45, -45);
+  pros::delay(450);
   chassis.drive_set(0, 0);
   pros::delay(100);
 
-  // 3) Drive forward 25 in
+  // 3) Drive forward 42 in
   chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(100);
 
-  // 4) Timed right turn ~75 degrees (no IMU)
-  chassis.drive_set(70, -70);
-  pros::delay(425);
+  // 4) Timed right turn ~70 degrees (no IMU)
+  chassis.drive_set(45, -45);
+  pros::delay(350);
   chassis.drive_set(0, 0);
   pros::delay(100);
 
-  // 5) Back up 20 in
+  // 5) Back up 30 in
   chassis.pid_drive_set(-30_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(100);
@@ -157,3 +158,4 @@ void right_start_auton() {
   intake.move(0);
   intake_stage2.move(0);
 }
+
