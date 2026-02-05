@@ -16,7 +16,26 @@ ez::Drive chassis(
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 pros::Motor intake(16);
-pros::Motor intake_stage2(5);
+pros::Motor intake_stage2(-5);
+
+namespace {
+// Leave disabled until port + plumbing are finalized.
+constexpr bool MATCHLOAD_ENABLED = false;
+constexpr char MATCHLOAD_ADI_PORT = 'A';
+pros::adi::DigitalOut* matchload_piston = nullptr;
+bool matchload_raised_state = false;
+}  // namespace
+
+void matchload_set(bool raised) {
+  matchload_raised_state = raised;
+  if (matchload_piston != nullptr) {
+    matchload_piston->set_value(raised);
+  }
+}
+
+void matchload_toggle() { matchload_set(!matchload_raised_state); }
+
+bool matchload_is_raised() { return matchload_raised_state; }
 
 void intake_control() {
   if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
@@ -57,6 +76,11 @@ void initialize() {
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
+  if (MATCHLOAD_ENABLED) {
+    matchload_piston = new pros::adi::DigitalOut(MATCHLOAD_ADI_PORT);
+    matchload_set(false);  // Start lowered by default.
+  }
+
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
   //  - change `back` to `front` if the tracking wheel is in front of the midline
   //  - ignore this if you aren't using a horizontal tracker
@@ -70,7 +94,7 @@ void initialize() {
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0.4);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.3, 0.3);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
-  chassis.opcontrol_speed_max_set(120);            // Cap driver speed to keep acceleration manageable on a light robot.
+  chassis.opcontrol_speed_max_set(100);            // Cap driver speed to keep acceleration manageable on a light robot.
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
@@ -83,6 +107,8 @@ void initialize() {
   ez::as::auton_selector.autons_add({
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
+      {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
+      {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"Drive and Turn\n\nexemplar drive forward and turn", drive_and_turn},
       {"Swing example\n\nexemplar swing", swing_example},
   });
@@ -131,6 +157,7 @@ void autonomous() {
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_imu_reset();                  // Reset IMU heading so turn targets are repeatable
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  matchload_set(false);                       // Keep lowered unless an auton explicitly changes it.
 
   /*
   Odometry and Pure Pursuit are not magic
@@ -242,6 +269,9 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     intake_control();
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+      matchload_toggle();
+    }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
