@@ -37,50 +37,6 @@ void default_constants() {
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there 
 }
 
-///
-// Combining Turn + Drive
-///
-void drive_and_turn() {
-  chassis.drive_imu_reset();
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true, false);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(-45_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true, false);
-  chassis.pid_wait();
-}
-
-///
-// Swing Example
-///
-void swing_example() {
-  chassis.drive_imu_reset();
-  // The first parameter is ez::LEFT_SWING or ez::RIGHT_SWING
-  // The second parameter is the target in degrees
-  // The third parameter is the speed of the moving side of the drive
-  // The fourth parameter is the speed of the still side of the drive, this allows for wider arcs
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 45_deg, SWING_SPEED, 45);
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::RIGHT_SWING, 0_deg, SWING_SPEED, 45);
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::RIGHT_SWING, 45_deg, SWING_SPEED, 45);
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 0_deg, SWING_SPEED, 45);
-  chassis.pid_wait();
-}
-
 void left_start_auton() {
   chassis.drive_imu_reset();
 

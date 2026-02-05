@@ -107,10 +107,8 @@ void initialize() {
   ez::as::auton_selector.autons_add({
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
-      {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
-      {"Drive and Turn\n\nexemplar drive forward and turn", drive_and_turn},
-      {"Swing example\n\nexemplar swing", swing_example},
+      {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
   });
 
   // Initialize chassis and auton selector
