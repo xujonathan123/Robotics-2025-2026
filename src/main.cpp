@@ -74,8 +74,6 @@ void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
 
-  pros::delay(500);  // Stop the user from doing anything while legacy ports configure
-
   if (MATCHLOAD_ENABLED) {
     matchload_piston = new pros::adi::DigitalOut(MATCHLOAD_ADI_PORT);
     matchload_set(false);  // Start lowered by default.

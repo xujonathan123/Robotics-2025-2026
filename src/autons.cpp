@@ -172,7 +172,7 @@ void left_start_matchload() {
   // 7) Run both stages to eject balls from the top
   intake.move(127);
   intake_stage2.move(127);
-  pros::delay(1000);
+  pros::delay(2000);
   intake.move(0);
   intake_stage2.move(0);
 }
