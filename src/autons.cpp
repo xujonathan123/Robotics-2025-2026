@@ -37,6 +37,14 @@ void default_constants() {
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there 
 }
 
+namespace {
+void stop_all_motors() {
+  chassis.drive_set(0, 0);
+  intake.move(0);
+  intake_stage2.move(0);
+}
+}  // namespace
+
 void left_start_auton() {
   chassis.drive_imu_reset();
 
@@ -75,6 +83,7 @@ void left_start_auton() {
   pros::delay(3000);
   intake.move(0);
   intake_stage2.move(0);
+  stop_all_motors();
 }
 
 void right_start_auton() {
@@ -118,6 +127,7 @@ void right_start_auton() {
   pros::delay(3000);
   intake.move(0);
   intake_stage2.move(0);
+  stop_all_motors();
 }
 
 void left_start_matchload() {
@@ -175,6 +185,7 @@ void left_start_matchload() {
   pros::delay(2000);
   intake.move(0);
   intake_stage2.move(0);
+  stop_all_motors();
 }
 
 void temp_skills() {
