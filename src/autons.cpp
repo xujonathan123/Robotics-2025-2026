@@ -194,4 +194,5 @@ void temp_skills() {
   pros::delay(2000);
   intake_stage2.move(0);
   intake.move(0);
+  stop_all_motors();
 }

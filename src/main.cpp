@@ -21,8 +21,6 @@ pros::Motor intake_stage2(-5);
 namespace {
 // Leave disabled until port + plumbing are finalized.
 constexpr bool MATCHLOAD_ENABLED = false;
-// Disable manual auton trigger in opcontrol to prevent accidental re-runs.
-constexpr bool ENABLE_MANUAL_AUTON = false;
 constexpr char MATCHLOAD_ADI_PORT = 'A';
 pros::adi::DigitalOut* matchload_piston = nullptr;
 bool matchload_raised_state = false;
@@ -219,9 +217,8 @@ void ez_template_extras() {
     if (master.get_digital_new_press(DIGITAL_X))
       chassis.pid_tuner_toggle();
 
-    // Trigger the selected autonomous routine (disabled by default)
-    if (ENABLE_MANUAL_AUTON &&
-        master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
+    // Trigger the selected autonomous routine
+    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
       pros::motor_brake_mode_e_t preference = chassis.drive_brake_get();
       autonomous();
       chassis.drive_brake_set(preference);
