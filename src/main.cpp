@@ -16,7 +16,7 @@ ez::Drive chassis(
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 pros::Motor intake(16);
-pros::Motor intake_stage2(-5);
+pros::Motor intake_stage2(5);
 
 namespace {
 // Leave disabled until port + plumbing are finalized.
@@ -91,8 +91,8 @@ void initialize() {
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0.4);   // Sets the active brake kP. We recommend ~2.  0 will disable.
-  chassis.opcontrol_curve_default_set(0.3, 0.3);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
-  chassis.opcontrol_speed_max_set(100);            // Cap driver speed to keep acceleration manageable on a light robot.
+  chassis.opcontrol_curve_default_set(0.5, 0.5);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
+  chassis.opcontrol_speed_max_set(90);            // Cap driver speed to keep acceleration manageable on a light robot.
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
@@ -107,6 +107,7 @@ void initialize() {
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
+      {"skills for starting right side\n\nback left corner lines up with black corner to the nail", right_start_skills},
   });
 
   // Initialize chassis and auton selector
@@ -256,7 +257,11 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
 
-    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // Standard split arcade with reduced turn sensitivity.
+    int forward = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    int turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    turn = static_cast<int>(turn * 0.5);  // 50% turn sensitivity
+    chassis.drive_set(forward + turn, forward - turn);
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
