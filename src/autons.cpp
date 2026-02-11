@@ -214,8 +214,8 @@ void right_start_skills() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 3) Drive forward 42 in
-  chassis.pid_drive_set(42_in, DRIVE_SPEED, true, false);
+  // 3) Drive forward 43 in
+  chassis.pid_drive_set(43_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(160);
 
@@ -241,8 +241,8 @@ void right_start_skills() {
   // 7) reset imu for way back
   chassis.drive_imu_reset();
 
-  // 8) Drive forward 40 inches
-  chassis.pid_drive_set(40_in, DRIVE_SPEED, true, false);
+  // 8) Drive forward 35 inches
+  chassis.pid_drive_set(35_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(1000);
 
@@ -262,7 +262,7 @@ void right_start_skills() {
   pros::delay(160);
 
   // 12) Drive forward 120 inches
-  chassis.pid_drive_set(120_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(124_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(160);
 
@@ -271,13 +271,13 @@ void right_start_skills() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 14) Drive forward 25 inches
-  chassis.pid_drive_set(25_in, DRIVE_SPEED, true, false);
+  // 14) Drive forward 15 inches
+  chassis.pid_drive_set(15_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(1000);
 
-  // 15) Drive backward 40 inches
-  chassis.pid_drive_set(-40_in, DRIVE_SPEED, true, false);
+  // 15) Drive backward 35 inches
+  chassis.pid_drive_set(-35_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(160);
 
@@ -308,10 +308,10 @@ void right_start_skills() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 21) Drive 50 inches into parking spot and clear park zone 
+  // 21) Drive 40 inches into parking spot and clear park zone 
   intake.move(127);
   intake_stage2.move(127);
-  chassis.pid_drive_set(50_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(40_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(2000);
   intake.move(0);
