@@ -108,6 +108,7 @@ void initialize() {
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
       {"skills for starting right side\n\nback left corner lines up with black corner to the nail", right_start_skills},
+      {"skills for starting left side\n\nback right corner lines up with black corner to the nail", left_start_skills},
   });
 
   // Initialize chassis and auton selector
