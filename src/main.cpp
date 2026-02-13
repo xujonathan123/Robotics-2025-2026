@@ -103,12 +103,12 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"skills for starting mid\n\nline up midbj", mid_start_skills},
       {"auton for starting left side\n\nback right corner lines up with black corner to the nail", left_start_auton},
       {"auton for starting right side\n\nback left corner lines up with black corner to the nail", right_start_auton},
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
       {"skills for starting right side\n\nback left corner lines up with black corner to the nail", right_start_skills},
-      {"skills for starting mid\n\nline up midbj", mid_start_skills},
       {"park zone skills\n\nstart right in front", park_zone_skills}
   });
 

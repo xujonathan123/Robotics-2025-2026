@@ -34,7 +34,7 @@ void default_constants() {
   chassis.slew_drive_constants_set(6_in, 35);
   chassis.slew_swing_constants_set(6_in, 40);
 
-  chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there 
+  chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 }
 
 namespace {
@@ -292,7 +292,7 @@ void right_start_skills() {
   chassis.pid_drive_set(15_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(160);
-  
+
   // 18) IMU turn left 90 degrees
   chassis.pid_turn_set(-90_deg, TURN_SPEED);
   chassis.pid_wait();
@@ -308,7 +308,7 @@ void right_start_skills() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 21) Drive 40 inches into parking spot and clear park zone 
+  // 21) Drive 40 inches into parking spot and clear park zone
   intake.move(127);
   intake_stage2.move(127);
   chassis.pid_drive_set(40_in, DRIVE_SPEED, true, false);
@@ -327,7 +327,7 @@ void mid_start_skills() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 2) IMU turn right 90 degrees 
+  // 2) IMU turn right 90 degrees
   chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait();
   pros::delay(160);
@@ -350,7 +350,7 @@ void mid_start_skills() {
   pros::delay(3000);
   intake_stage2.move(0);
   intake.move(0);
-  
+
   // 8) drive backward 35 inches
   chassis.pid_drive_set(-35_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
@@ -365,8 +365,8 @@ void mid_start_skills() {
   intake_stage2.move(0);
   intake.move(0);
 
-  // 10) Drive forward 10 inches
-  chassis.pid_drive_set(10_in, DRIVE_SPEED, true, false);
+  // 10) Drive forward 15 inches
+  chassis.pid_drive_set(15_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(1000);
 
@@ -376,8 +376,8 @@ void mid_start_skills() {
   pros::delay(160);
 
   // 12) Drive forward 120 inches
-  chassis.pid_drive_set(121_in, DRIVE_SPEED, true, false);
-  chassis.pid_wait();  
+  chassis.pid_drive_set(119_in, DRIVE_SPEED, true, false);
+  chassis.pid_wait();
   pros::delay(160);
 
   // 13) IMU turn right 90 degrees (return 0 deg orientation)
@@ -388,7 +388,7 @@ void mid_start_skills() {
   // 14) Drive forward 15 inches and intake
   intake.move(127);
   intake_stage2.move(-127);
-  chassis.pid_drive_set(15_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(25_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(3000);
   intake_stage2.move(0);
@@ -411,7 +411,7 @@ void mid_start_skills() {
   chassis.pid_drive_set(10_in, DRIVE_SPEED, true, false);
   chassis.pid_wait();
   pros::delay(160);
-  
+
   // 18) IMU turn left 90 degrees
   chassis.pid_turn_set(-90_deg, TURN_SPEED);
   chassis.pid_wait();
@@ -422,15 +422,15 @@ void mid_start_skills() {
   chassis.pid_wait();
   pros::delay(160);
 
-  // 20) IMU turn right 90 degrees (original orientation)
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  // 20) IMU turn left 90 degrees (180 total degrees)
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait();
   pros::delay(160);
 
-  // 21) Drive 40 inches into parking spot and clear park zone 
+  // 21) Drive 40 inches into parking spot and clear park zone
   intake.move(127);
   intake_stage2.move(127);
-  chassis.pid_drive_set(50_in, DRIVE_SPEED, true, false);
+  chassis.pid_drive_set(-50_in, 127, true, false);
   chassis.pid_wait();
   pros::delay(3000);
   intake.move(0);
@@ -464,7 +464,7 @@ void park_zone_skills() {
 
   // 5) Drive forward 110 inches
   chassis.pid_drive_set(110_in, DRIVE_SPEED, true, false);
-  chassis.pid_wait();  
+  chassis.pid_wait();
   pros::delay(160);
 
   // 6) IMU turn right 90 degrees
@@ -490,7 +490,7 @@ void park_zone_skills() {
   pros::delay(160);
 
   // 10) Drive forward 2 inches and backward 2 inches 5 times
-  for (int i = 0; i < 5; i++) 
+  for (int i = 0; i < 5; i++)
   {
     chassis.pid_drive_set(-2_in, 50, true, false);
     chassis.pid_wait();
@@ -567,7 +567,7 @@ void park_zone_skills() {
 
   // 23) Drive forward 110 inches
   chassis.pid_drive_set(110_in, DRIVE_SPEED, true, false);
-  chassis.pid_wait();  
+  chassis.pid_wait();
   pros::delay(160);
 
   // 24) IMU turn right 90 degrees
