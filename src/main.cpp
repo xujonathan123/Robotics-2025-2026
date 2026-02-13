@@ -21,7 +21,7 @@ pros::Motor intake_stage2(5);
 namespace {
 // Leave disabled until port + plumbing are finalized.
 constexpr bool MATCHLOAD_ENABLED = false;
-constexpr char MATCHLOAD_ADI_PORT = 'A';
+constexpr char MATCHLOAD_ADI_PORT = 'Lamy';
 pros::adi::DigitalOut* matchload_piston = nullptr;
 bool matchload_raised_state = false;
 }  // namespace
@@ -108,7 +108,8 @@ void initialize() {
       {"feb 7 skills\n\nspin intake for 3 sec for parking points", temp_skills},
       {"left start matchload\n\nleft start with matchload ramp raise/lower", left_start_matchload},
       {"skills for starting right side\n\nback left corner lines up with black corner to the nail", right_start_skills},
-      {"skills for starting left side\n\nback right corner lines up with black corner to the nail", left_start_skills},
+      {"skills for starting mid\n\nline up midbj", mid_start_skills},
+      {"park zone skills\n\nstart right in front", park_zone_skills}
   });
 
   // Initialize chassis and auton selector
